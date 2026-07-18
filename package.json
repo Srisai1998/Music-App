@@ -1,0 +1,27 @@
+{
+  "name": "music-streaming-app",
+  "version": "1.0.0",
+  "description": "Production-ready music streaming application",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend-web",
+    "admin",
+    "mobile"
+  ],
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:web": "cd frontend-web && npm run dev",
+    "dev:admin": "cd admin && npm run dev",
+    "dev:mobile": "cd mobile && npm start",
+    "build:backend": "cd backend && npm run build",
+    "build:web": "cd frontend-web && npm run build",
+    "build:admin": "cd admin && npm run build",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend-web && npm install && cd ../admin && npm install && cd ../mobile && npm install",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": ["music", "streaming", "spotify-clone", "react-native", "nextjs"],
+  "author": "Music App Team",
+  "license": "MIT"
+}

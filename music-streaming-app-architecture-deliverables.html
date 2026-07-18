@@ -1,0 +1,357 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Music App — Architecture</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; background: #f7f8fa; color: #1f2328; font-size: 14px; line-height: 1.6; }
+  .container { max-width: 760px; margin: 0 auto; padding: 32px 20px; }
+  h1 { font-size: 22px; font-weight: 700; color: #1f2328; margin-bottom: 4px; }
+  .subtitle { color: #57606a; font-size: 13px; margin-bottom: 28px; }
+  h2 { font-size: 15px; font-weight: 700; color: #1f2328; margin-bottom: 12px; margin-top: 28px; }
+  .badge { display: inline-block; background: #1db954; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-right: 6px; vertical-align: middle; }
+  .badge.blue { background: #3b82d4; }
+  .badge.purple { background: #7c5cd8; }
+  .badge.orange { background: #e57c28; }
+  .badge.red { background: #e74c3c; }
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; text-align: center; }
+  .stat .num { font-size: 26px; font-weight: 800; color: #1db954; }
+  .stat .lbl { font-size: 11px; color: #57606a; margin-top: 2px; }
+  .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; }
+  .card h3 { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .card ul { list-style: none; space-y: 4px; }
+  .card ul li { font-size: 12px; color: #57606a; padding: 3px 0; border-bottom: 1px solid #f0f1f3; display: flex; align-items: center; gap: 6px; }
+  .card ul li:last-child { border-bottom: none; }
+  .card ul li::before { content: "→"; color: #1db954; font-weight: bold; font-size: 11px; flex-shrink: 0; }
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .feature { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
+  .feature h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; color: #1f2328; }
+  .feature ul { list-style: none; }
+  .feature ul li { font-size: 11px; color: #57606a; padding: 2px 0; }
+  .feature ul li::before { content: "✓ "; color: #1db954; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { background: #f7f8fa; padding: 8px 12px; text-align: left; font-weight: 600; color: #57606a; border-bottom: 2px solid #e5e7eb; }
+  tbody td { padding: 8px 12px; border-bottom: 1px solid #f0f1f3; }
+  tbody tr:last-child td { border-bottom: none; }
+  code { background: #f0f1f3; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 11px; color: #1f2328; }
+  .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .flow-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; font-size: 12px; font-weight: 600; color: #1f2328; }
+  .flow-arrow { color: #3b82d4; font-weight: bold; font-size: 16px; }
+  .section-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .pill { display: inline-block; background: #f0f1f3; color: #57606a; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin: 2px; }
+  footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 11px; color: #57606a; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎵 Music Streaming App</h1>
+  <p class="subtitle">Production-ready — Spotify / JioSaavn / YouTube Music clone · TypeScript everywhere</p>
+
+  
+  <div class="stat-grid">
+    <div class="stat"><div class="num">99</div><div class="lbl">Total Files</div></div>
+    <div class="stat"><div class="num">7.7K</div><div class="lbl">Lines of Code</div></div>
+    <div class="stat"><div class="num">20+</div><div class="lbl">REST Endpoints</div></div>
+    <div class="stat"><div class="num">10</div><div class="lbl">DB Tables</div></div>
+  </div>
+
+  
+  <h2>System Architecture</h2>
+  <div class="section-card">
+    <div class="flow">
+      <div class="flow-box">📱 Mobile<br /><small>Expo/RN</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">🌐 Web<br /><small>Next.js 14</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">🔧 Nginx<br /><small>Reverse Proxy</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">⚙️ Express API<br /><small>Node.js + TS</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">🗄️ PostgreSQL<br /><small>+ Redis cache</small></div>
+    </div>
+    <div class="flow" style="margin-top:4px">
+      <div class="flow-box">🖥️ Admin Panel<br /><small>React + Vite</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">📦 AWS S3<br /><small>Media storage</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">💳 Stripe<br /><small>Subscriptions</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">📧 SMTP<br /><small>Emails</small></div>
+    </div>
+  </div>
+
+  
+  <h2>Tech Stack</h2>
+  <div class="arch-grid">
+    <div class="card">
+      <h3><span class="badge">API</span> Backend (Node.js)</h3>
+      <ul>
+        <li>Express.js + TypeScript</li>
+        <li>Knex.js query builder</li>
+        <li>PostgreSQL 16 + Full-text search</li>
+        <li>Redis 7 response caching</li>
+        <li>JWT Access + Refresh tokens</li>
+        <li>Google OAuth 2.0</li>
+        <li>bcryptjs password hashing</li>
+        <li>Helmet + CORS + Rate limiting</li>
+        <li>Multer S3 file upload</li>
+        <li>Winston structured logging</li>
+        <li>express-validator input checks</li>
+        <li>Stripe Checkout + Webhooks</li>
+        <li>Nodemailer email service</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="badge blue">WEB</span> Frontend (Next.js)</h3>
+      <ul>
+        <li>Next.js 14 App Router + RSC</li>
+        <li>Tailwind CSS dark/light mode</li>
+        <li>Redux Toolkit state management</li>
+        <li>React Query data fetching</li>
+        <li>Howler.js audio engine</li>
+        <li>Axios + auto token refresh</li>
+        <li>React Hook Form + Zod</li>
+        <li>Radix UI components</li>
+        <li>Framer Motion animations</li>
+        <li>Persistent bottom player</li>
+        <li>Seek bar + volume control</li>
+        <li>Debounced search</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="badge purple">MOBILE</span> React Native (Expo)</h3>
+      <ul>
+        <li>Expo SDK 50</li>
+        <li>react-native-track-player</li>
+        <li>Background playback</li>
+        <li>Lock screen controls</li>
+        <li>Bottom tab navigation</li>
+        <li>Stack + Modal navigation</li>
+        <li>MiniPlayer overlay</li>
+        <li>Full player screen</li>
+        <li>AsyncStorage tokens</li>
+        <li>EAS build for iOS/Android</li>
+        <li>expo-av + expo-notifications</li>
+        <li>AdMob integration hooks</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="badge orange">ADMIN</span> Admin Panel (Vite)</h3>
+      <ul>
+        <li>React 18 + TypeScript + Vite</li>
+        <li>Protected admin-only routes</li>
+        <li>Recharts analytics charts</li>
+        <li>Revenue &amp; subscription graphs</li>
+        <li>Song upload with drag-drop</li>
+        <li>User management + suspend</li>
+        <li>Advertisement manager</li>
+        <li>Paginated data tables</li>
+        <li>Area, Bar &amp; Pie charts</li>
+        <li>Top songs &amp; artists stats</li>
+        <li>React Hot Toast notifications</li>
+      </ul>
+    </div>
+  </div>
+
+  
+  <h2>Database Schema (PostgreSQL)</h2>
+  <div class="section-card">
+    <table>
+      <thead>
+        <tr><th>Table</th><th>Key Columns</th><th>Relations</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>users</strong></td><td>email, password_hash, role, subscription_type, google_id, stripe_customer_id</td><td>→ playlists, favorites, history</td></tr>
+        <tr><td><strong>artists</strong></td><td>name, slug, bio, monthly_listeners, is_featured, is_verified</td><td>→ songs, albums</td></tr>
+        <tr><td><strong>genres</strong></td><td>name, slug, color, cover_url</td><td>→ songs, albums</td></tr>
+        <tr><td><strong>albums</strong></td><td>title, slug, artist_id, album_type, release_date, total_tracks</td><td>artist, genre</td></tr>
+        <tr><td><strong>songs</strong></td><td>title, audio_url, duration_seconds, play_count, like_count, is_premium, is_sponsored</td><td>artist, album, genre</td></tr>
+        <tr><td><strong>playlists</strong></td><td>name, user_id, visibility, total_songs, is_featured</td><td>user, songs</td></tr>
+        <tr><td><strong>playlist_songs</strong></td><td>playlist_id, song_id, position, added_by</td><td>playlist ↔ song</td></tr>
+        <tr><td><strong>favorites</strong></td><td>user_id, song_id, created_at</td><td>user ↔ song</td></tr>
+        <tr><td><strong>listening_history</strong></td><td>user_id, song_id, played_at, play_duration_seconds, device_type</td><td>user → song</td></tr>
+        <tr><td><strong>subscriptions</strong></td><td>plan, status, stripe_subscription_id, amount, starts_at, expires_at</td><td>user</td></tr>
+        <tr><td><strong>advertisements</strong></td><td>ad_type, placement, impression_count, click_count, budget, is_active</td><td>standalone</td></tr>
+        <tr><td><strong>downloads</strong></td><td>user_id, song_id, downloaded_at</td><td>user ↔ song</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;font-size:11px;color:#57606a">Indexes: full-text search (GIN) on songs/artists/albums titles · play_count DESC · user/played_at for history</div>
+  </div>
+
+  
+  <h2>Features Implemented</h2>
+  <div class="feature-grid">
+    <div class="feature">
+      <h4>👤 User Features</h4>
+      <ul>
+        <li>Email/password registration</li>
+        <li>Google OAuth login</li>
+        <li>Email verification</li>
+        <li>Password reset flow</li>
+        <li>Avatar upload to S3</li>
+        <li>Liked songs collection</li>
+        <li>Playlist CRUD</li>
+        <li>Listening history</li>
+        <li>Personalized recs</li>
+        <li>Artist follow system</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h4>🎵 Player Features</h4>
+      <ul>
+        <li>Play / Pause / Seek</li>
+        <li>Next / Previous</li>
+        <li>Shuffle mode</li>
+        <li>Repeat (none/all/one)</li>
+        <li>Volume + mute</li>
+        <li>Background playback</li>
+        <li>Lock screen controls</li>
+        <li>Queue management</li>
+        <li>Mini player (mobile)</li>
+        <li>Bottom player (web)</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h4>💰 Monetization</h4>
+      <ul>
+        <li>Monthly subscription</li>
+        <li>Yearly subscription</li>
+        <li>Stripe Checkout</li>
+        <li>Webhook lifecycle</li>
+        <li>Premium badge</li>
+        <li>Banner ads</li>
+        <li>Interstitial ads</li>
+        <li>Rewarded video ads</li>
+        <li>Ad analytics</li>
+        <li>Sponsored songs/playlists</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h4>🔒 Security</h4>
+      <ul>
+        <li>bcrypt password hashing</li>
+        <li>JWT access tokens</li>
+        <li>Refresh token rotation</li>
+        <li>Helmet headers</li>
+        <li>CORS whitelist</li>
+        <li>Rate limiting</li>
+        <li>Input validation</li>
+        <li>MIME type allowlist</li>
+        <li>Role-based access</li>
+        <li>Non-root Docker</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h4>📊 Analytics</h4>
+      <ul>
+        <li>Dashboard overview</li>
+        <li>Revenue charts</li>
+        <li>Play trends (30d)</li>
+        <li>Top songs ranking</li>
+        <li>Top artists ranking</li>
+        <li>Genre breakdown</li>
+        <li>Subscription plan split</li>
+        <li>Ad impressions/CTR</li>
+        <li>User growth chart</li>
+        <li>Active users metric</li>
+      </ul>
+    </div>
+    <div class="feature">
+      <h4>🚀 DevOps</h4>
+      <ul>
+        <li>Docker Compose stack</li>
+        <li>Multi-stage Dockerfiles</li>
+        <li>Nginx reverse proxy</li>
+        <li>Gzip compression</li>
+        <li>Health checks</li>
+        <li>DB migrations</li>
+        <li>Database seeder</li>
+        <li>ENV template file</li>
+        <li>API documentation</li>
+        <li>Deployment guide</li>
+      </ul>
+    </div>
+  </div>
+
+  
+  <h2>REST API Endpoints</h2>
+  <div class="section-card">
+    <table>
+      <thead><tr><th>Resource</th><th>Endpoints</th><th>Auth</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Auth</strong></td><td>register, login, refresh, google, me, profile, forgot-password, reset-password, verify-email</td><td>Mixed</td></tr>
+        <tr><td><strong>Songs</strong></td><td>list, get, trending, search, create*, update*, delete*</td><td>Optional / Admin*</td></tr>
+        <tr><td><strong>Artists</strong></td><td>list, get, create*, follow</td><td>Optional / Admin*</td></tr>
+        <tr><td><strong>Albums</strong></td><td>list, get</td><td>Optional</td></tr>
+        <tr><td><strong>Playlists</strong></td><td>list, my, get, create, update, delete, addSong, removeSong</td><td>Optional / Required</td></tr>
+        <tr><td><strong>Favorites</strong></td><td>toggle, list, check</td><td>Required</td></tr>
+        <tr><td><strong>History</strong></td><td>list, recent</td><td>Required</td></tr>
+        <tr><td><strong>Recommendations</strong></td><td>get (genre-based)</td><td>Required</td></tr>
+        <tr><td><strong>Subscriptions</strong></td><td>checkout, webhook, me, cancel</td><td>Required</td></tr>
+        <tr><td><strong>Admin</strong></td><td>dashboard, analytics/users, analytics/songs, analytics/revenue, users, ads, toggleUser, createAd, toggleAd</td><td>Admin only</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  
+  <h2>Quick Start</h2>
+  <div class="section-card">
+    <table>
+      <thead><tr><th>Command</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>cp .env.example .env</code></td><td>Configure environment variables</td></tr>
+        <tr><td><code>docker-compose up -d</code></td><td>Start PostgreSQL, Redis, API, Web, Admin, Nginx</td></tr>
+        <tr><td><code>docker-compose exec backend npm run migrate</code></td><td>Run database migrations</td></tr>
+        <tr><td><code>docker-compose exec backend npm run seed</code></td><td>Seed sample data + admin user</td></tr>
+        <tr><td><code>http://localhost:3000</code></td><td>Web frontend</td></tr>
+        <tr><td><code>http://localhost:3001</code></td><td>Admin panel (admin@musicapp.com / Admin@12345)</td></tr>
+        <tr><td><code>http://localhost:5000/health</code></td><td>API health check</td></tr>
+        <tr><td><code>cd mobile &amp;&amp; npx expo start</code></td><td>Start mobile app (iOS/Android)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  
+  <h2>Deliverables Summary</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+    <span class="pill">backend/src/server.ts</span>
+    <span class="pill">8 controllers</span>
+    <span class="pill">9 route files</span>
+    <span class="pill">3 middleware</span>
+    <span class="pill">3 config modules</span>
+    <span class="pill">DB migration (all tables)</span>
+    <span class="pill">DB seeder</span>
+    <span class="pill">Next.js layout + pages</span>
+    <span class="pill">Redux playerSlice</span>
+    <span class="pill">Redux authSlice</span>
+    <span class="pill">Howler.js audio hook</span>
+    <span class="pill">MusicPlayer component</span>
+    <span class="pill">SongCard / MediaCard</span>
+    <span class="pill">Sidebar navigation</span>
+    <span class="pill">Login / Register pages</span>
+    <span class="pill">Search page (FTS)</span>
+    <span class="pill">Liked Songs page</span>
+    <span class="pill">Premium page (Stripe)</span>
+    <span class="pill">Mobile App.tsx</span>
+    <span class="pill">10 mobile screens</span>
+    <span class="pill">TrackPlayer service</span>
+    <span class="pill">MiniPlayer component</span>
+    <span class="pill">Admin DashboardPage</span>
+    <span class="pill">Admin UploadSongPage</span>
+    <span class="pill">Admin UsersPage</span>
+    <span class="pill">docker-compose.yml</span>
+    <span class="pill">4 Dockerfiles</span>
+    <span class="pill">Nginx config</span>
+    <span class="pill">README.md</span>
+    <span class="pill">api-docs.md</span>
+    <span class="pill">deployment-guide.md</span>
+    <span class="pill">.env.example (75 vars)</span>
+  </div>
+
+  <footer>Made with IBM Bob</footer>
+</div>
+</body>
+</html>

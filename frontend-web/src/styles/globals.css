@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #0f0f0f;
+    --card: #f7f8fa;
+    --card-foreground: #1f2328;
+    --primary: #1db954;
+    --primary-foreground: #ffffff;
+    --secondary: #121212;
+    --muted: #535353;
+    --muted-foreground: #b3b3b3;
+    --border: #282828;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: #121212;
+    --foreground: #ffffff;
+    --card: #181818;
+    --card-foreground: #ffffff;
+    --primary: #1db954;
+    --primary-foreground: #000000;
+    --secondary: #282828;
+    --muted: #535353;
+    --muted-foreground: #b3b3b3;
+    --border: #282828;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  html { @apply scroll-smooth; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #535353; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #b3b3b3; }
+
+/* Range input (seek bar) */
+input[type="range"] {
+  @apply appearance-none bg-transparent cursor-pointer;
+}
+input[type="range"]::-webkit-slider-track {
+  @apply h-1 bg-muted rounded-full;
+}
+input[type="range"]::-webkit-slider-thumb {
+  @apply appearance-none h-3 w-3 bg-white rounded-full -mt-1;
+}
+
+/* Animations */
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-green { animation: pulse-green 1.5s ease-in-out infinite; }
+
+/* Music bars animation */
+.music-bar {
+  display: inline-block;
+  width: 3px;
+  background: var(--primary);
+  border-radius: 2px;
+  animation: musicBar 1s ease-in-out infinite;
+}
+.music-bar:nth-child(2) { animation-delay: 0.2s; }
+.music-bar:nth-child(3) { animation-delay: 0.4s; }
+.music-bar:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes musicBar {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
