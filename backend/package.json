@@ -11,6 +11,7 @@
     "seed": "ts-node src/scripts/seed.ts",
     "sync:jamendo": "ts-node -r dotenv/config src/scripts/syncJamendo.ts",
     "sync:jamendo:indian": "ts-node -r dotenv/config src/scripts/syncJamendoIndian.ts",
+    "sync:jamendo:movies": "ts-node -r dotenv/config src/scripts/syncJamendoMovies.ts",
     "lint": "eslint src/**/*.ts",
     "test": "jest --passWithNoTests"
   },
