@@ -15,6 +15,7 @@ const uploadFields = multer({ storage: multer.memoryStorage() }).fields([
 
 router.get('/', r(optionalAuth), r(songsCtrl.listSongs));
 router.get('/trending', r(optionalAuth), r(songsCtrl.getTrending));
+router.get('/languages', r(optionalAuth), r(songsCtrl.getLanguages));
 router.get('/search', searchLimiter, r(optionalAuth), r(songsCtrl.searchAll));
 router.get('/:id', r(optionalAuth), r(songsCtrl.getSong));
 

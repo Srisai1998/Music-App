@@ -10,6 +10,7 @@
     "migrate": "ts-node src/scripts/migrate.ts",
     "seed": "ts-node src/scripts/seed.ts",
     "sync:jamendo": "ts-node -r dotenv/config src/scripts/syncJamendo.ts",
+    "sync:jamendo:indian": "ts-node -r dotenv/config src/scripts/syncJamendoIndian.ts",
     "lint": "eslint src/**/*.ts",
     "test": "jest --passWithNoTests"
   },

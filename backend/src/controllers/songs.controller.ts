@@ -20,10 +20,23 @@ const withArtistAndAlbum = () =>
       'g.name as genre_name'
     );
 
+// ── List Available Languages ────────────────────────────────────────────────────
+export const getLanguages = async (_req: AuthRequest, res: Response): Promise<void> => {
+  const rows = await db('songs')
+    .where('is_published', true)
+    .where('is_active', true)
+    .whereNotNull('language')
+    .select('language')
+    .count('* as count')
+    .groupBy('language')
+    .orderBy('count', 'desc');
+  res.json({ success: true, data: rows });
+};
+
 // ── List Songs ────────────────────────────────────────────────────────────────
 export const listSongs = async (req: AuthRequest, res: Response): Promise<void> => {
   const { page, limit, offset } = getPaginationParams(req.query);
-  const { search, genre_id, artist_id, sort = 'play_count', order = 'desc' } = req.query as any;
+  const { search, genre_id, artist_id, language, sort = 'play_count', order = 'desc' } = req.query as any;
 
   const cacheKey = `songs:${JSON.stringify(req.query)}`;
   const cached = await getCache(cacheKey);
@@ -41,11 +54,13 @@ export const listSongs = async (req: AuthRequest, res: Response): Promise<void> 
   }
   if (genre_id) query = query.where('s.genre_id', genre_id);
   if (artist_id) query = query.where('s.artist_id', artist_id);
+  if (language) query = query.where('s.language', language);
 
   const countQuery = db('songs as s').where('s.is_published', true).where('s.is_active', true);
   if (search) countQuery.whereRaw(`to_tsvector('english', s.title) @@ plainto_tsquery('english', ?)`, [search]);
   if (genre_id) countQuery.where('s.genre_id', genre_id);
   if (artist_id) countQuery.where('s.artist_id', artist_id);
+  if (language) countQuery.where('s.language', language);
 
   const [songs, [{ count }]] = await Promise.all([
     query.orderBy(`s.${sort}`, order).limit(limit).offset(offset),

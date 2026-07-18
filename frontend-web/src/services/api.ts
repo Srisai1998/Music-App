@@ -59,6 +59,7 @@ export const songsAPI = {
   list: (params?: any) => api.get('/songs', { params }),
   get: (id: string) => api.get(`/songs/${id}`),
   trending: (limit?: number) => api.get('/songs/trending', { params: { limit } }),
+  languages: () => api.get('/songs/languages'),
   search: (q: string, params?: any) => api.get('/songs/search', { params: { q, ...params } }),
   create: (data: FormData) => api.post('/songs', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
   update: (id: string, data: any) => api.put(`/songs/${id}`, data),
