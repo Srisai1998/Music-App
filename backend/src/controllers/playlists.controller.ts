@@ -12,8 +12,7 @@ export const listPlaylists = async (req: AuthRequest, res: Response): Promise<vo
 
   const query = db('playlists as p')
     .leftJoin('users as u', 'p.user_id', 'u.id')
-    .where('p.is_active', true)
-    .select('p.*', 'u.display_name as owner_name', 'u.avatar_url as owner_avatar');
+    .where('p.is_active', true);
 
   if (visibility === 'public') {
     query.where('p.visibility', 'public');
@@ -22,8 +21,13 @@ export const listPlaylists = async (req: AuthRequest, res: Response): Promise<vo
   }
 
   const [playlists, [{ count }]] = await Promise.all([
-    query.clone().orderBy('p.created_at', 'desc').limit(limit).offset(offset),
-    query.clone().count('* as count'),
+    query
+      .clone()
+      .select('p.*', 'u.display_name as owner_name', 'u.avatar_url as owner_avatar')
+      .orderBy('p.created_at', 'desc')
+      .limit(limit)
+      .offset(offset),
+    query.clone().count('p.id as count'),
   ]);
 
   res.json({ success: true, ...paginate(playlists, parseInt(count as string), page, limit) });
